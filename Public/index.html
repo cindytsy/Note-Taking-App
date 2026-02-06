@@ -1,15 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Note App</title>
+  <meta charset="UTF-8" />
+  <title>Note-Taking App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>My Notes</h1>
 
-  <input id="title" placeholder="Title">
-  <textarea id="content"></textarea>
-  <button>Add Note</button>
+  <div class="app">
+    <h1>📝 My Notes</h1>
 
-  <script src="app.js"></script>
+    <form id="noteForm">
+      <input type="text" id="title" placeholder="Note title" required />
+      <textarea id="content" placeholder="Write your note..." required></textarea>
+      <button type="submit">Add Note</button>
+    </form>
+
+    <ul id="notesList"></ul>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

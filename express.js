@@ -1,120 +1,95 @@
-const express = require("express");
+require('dotenv').config();
+
+const express = require('express');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/auth');
+
+const Note = require('./models/note');
+const User = require('./models/user');
+
 const app = express();
 
+// Connect MongoDB
+connectDB();
+
+// Middleware
 app.use(express.json());
 app.use(express.static('public'));
 
-let users = [];
-let notes = [];
+// Routes
+app.use('/api/auth', authRoutes);
 
-// POST create note
-app.post("/api/auth/register", (req, res) => {
-  const { username, password } = req.body;
-
-  // Server-side validation
-  if (!username || !password) {
-    return res.status(400).json({
-      error: "Username and password are required"
-    });
-  }
-
-  // No duplicate registration
-  const existingUser = users.find(u => u.username === username);
-  if (existingUser) {
-    return res.status(409).json({
-      error: "User already exists"
-    });
-  }
-
-  const newUser = {
-    id: Date.now(),
-    username,
-    password 
-  };
-
-  users.push(newUser);
-
-  res.status(201).json({
-    message: "User registered successfully",
-    userId: newUser.id
-  });
+app.get('/', (req, res) => {
+  res.send('API running');
 });
 
-// POST create note
-app.post("/api/auth/login", (req, res) => {
-  const { username, password } = req.body;
+// ---------- Auth ----------
 
-  // Server-side validation
-  if (!username || !password) {
-    return res.status(400).json({
-      error: "Username and password are required"
-    });
+// Register
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password)
+      return res.status(400).json({ error: 'Username and password required' });
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser)
+      return res.status(409).json({ error: 'User already exists' });
+
+    const user = await User.create({ username, password });
+    res.status(201).json({ message: 'User registered', userId: user._id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const user = users.find(
-    u => u.username === username && u.password === password
-  );
-
-  if (!user) {
-    return res.status(401).json({
-      error: "Invalid username or password"
-    });
-  }
-
-  res.json({
-    message: "Login successful",
-    userId: user.id
-  });
 });
 
-// GET all notes
-app.get("/api/notes", (req, res) => {
+// Login
+app.post('/api/auth/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = await User.findOne({ username });
+  if(!user || user.password !== password) return res.status(401).json({ error: 'Invalid credentials' });
+
+
+  res.json({ message: 'Login successful', userId: user._id });
+});
+
+// ---------- Notes CRUD ----------
+
+// GET notes
+app.get('/api/notes', async (req, res) => {
   const { userId } = req.query;
-  const userNotes = notes.filter(n => n.userId == userId);
-  res.json(userNotes);
+  const notes = await Note.find({ user: userId
+ });
+  res.json(notes);
 });
 
-// POST create note
-app.post("/api/notes", (req, res) => {
-  const { title, content } = req.body;
-
-  // Server-side validation
-  if (!title || !content) {
-    return res.status(400).json({ error: "Title and content are required" });
-  }
-
-  const newNote = {
-    id: Date.now(),
-    title,
-    content,
-    userId: req.body.userId
-  };
-
-  notes.push(newNote);
-  res.status(201).json(newNote);
+// POST note
+app.post('/api/notes', async (req, res) => {
+  const { title, content, userId } = req.body;
+  const note = await Note.create({ title, content, user: userId
+});
+  res.status(201).json(note);
 });
 
-// PUT update note
-app.put("/api/notes/:id", (req, res) => {
-  const note = notes.find(n => n.id == req.params.id);
-
-  // Server-side validation
-  if (!note) {
-    return res.status(404).json({ error: "Note not found" });
-  }
-
-  note.title = req.body.title || note.title;
-  note.content = req.body.content || note.content;
-
-  res.json(note);
+// PUT note
+app.put('/api/notes/:id', async (req, res) => {
+  const updated = await Note.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+  res.json(updated);
 });
 
 // DELETE note
-app.delete("/api/notes/:id", (req, res) => {
-  notes = notes.filter(n => n.id != req.params.id);
-  res.json({ message: "Note deleted" });
+app.delete('/api/notes/:id', async (req, res) => {
+  await Note.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Note deleted' });
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);

@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const mongoURI =
-  'mongodb+srv://cindytsy0630_db_user:Tt89211677@cluster1.pspzmrt.mongodb.net/?appName=Cluster1';
+const MONGO_URI =
+  'mongodb+srv://cindytsy0630_db_user:Tt89211677@notetakingapp.sqqc2k0.mongodb.net/notetakingapp';
 
-async function connectDB() {
+const connectDB = async () => {
   try {
-    await mongoose.connect(mongoURI);
-    console.log('MongoDB Connect Success！');
+    await mongoose.connect(MONGO_URI);
+    console.log('MongoDB Connected');
   } catch (error) {
     console.error('MongoDB Connect Fail:', error.message);
     process.exit(1);

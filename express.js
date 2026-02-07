@@ -9,8 +9,7 @@ const User = require('./models/user');
 
 const app = express();
 
-// Connect MongoDB
-connectDB();
+console.log('app.js started');
 
 // Middleware
 app.use(express.json());
@@ -50,7 +49,6 @@ app.post('/api/auth/login', async (req, res) => {
   const user = await User.findOne({ username });
   if(!user || user.password !== password) return res.status(401).json({ error: 'Invalid credentials' });
 
-
   res.json({ message: 'Login successful', userId: user._id });
 });
 
@@ -89,7 +87,19 @@ app.delete('/api/notes/:id', async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
+const PORT = 5000;
+
+const startServer = async () => {
+  try {
+    await connectDB(); 
+    console.log('MongoDB Connected');
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err.message);
+  }
+}
+
+startServer();

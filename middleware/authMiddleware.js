@@ -12,10 +12,10 @@ const protect = async (req, res, next) => {
       next();
     } catch (err) {
       console.error(err);
-      res.status(401).json({ message: '未授權' });
+      res.status(401).json({ message: 'not authorized' });
     }
   } else {
-    res.status(401).json({ message: '未授權，沒有 token' });
+    res.status(401).json({ message: 'not authorized, no token' });
   }
 };
 

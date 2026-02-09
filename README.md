@@ -50,7 +50,7 @@ MongoDB
 
 1. Clone the repository:
 
-git clone: https://github.com/cindytsy/Note-Taking-App/tree/main
+git clone: https://github.com/cindytsy/Note-Taking-App
 
 cd note-taking-app
 

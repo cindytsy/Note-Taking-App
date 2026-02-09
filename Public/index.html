@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Note-Taking App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>My Notes</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+   <header>
+    <h1>My Note</h1>
+  </header>
+  <div class="container">
+    <h1>My Notes</h1>
 
-  <div class="app">
-    <h1>📝 My Notes</h1>
+    <input id="noteTitle" placeholder="Title">
+    <textarea id="noteContent" rows="4" placeholder="Content"></textarea>
+    <button onclick="createNote()">Create Note</button>
 
-    <form id="noteForm">
-      <input type="text" id="title" placeholder="Note title" required />
-      <textarea id="content" placeholder="Write your note..." required></textarea>
-      <button type="submit">Add Note</button>
-    </form>
+    <h2>Your Notes</h2>
+    <div id="notes"></div>
 
-    <ul id="notesList"></ul>
+    <button style="margin-top:15px;background:#95a5a6;" onclick="logout()">Logout</button>
   </div>
 
   <script src="script.js"></script>

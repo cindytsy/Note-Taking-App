@@ -2,14 +2,19 @@ require('dotenv').config();
 
 const express = require('express');
 const connectDB = require('./config/db');
-const authRoutes = require('./routes/auth');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const authRoutes = require('./routes/authRoutes');
+const noteRoutes = require('./routes/noteRoutes');
 
 const Note = require('./models/note');
 const User = require('./models/user');
-
-const app = express();
+const { protect } = require('./middleware/authMiddleware');
 
 console.log('app.js started');
+
+const app = express();
 
 // Middleware
 app.use(express.json());
@@ -17,7 +22,9 @@ app.use(express.static('public'));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/notes', noteRoutes);
 
+// Health check
 app.get('/', (req, res) => {
   res.send('API running');
 });
@@ -83,23 +90,24 @@ app.put('/api/notes/:id', async (req, res) => {
 // DELETE note
 app.delete('/api/notes/:id', async (req, res) => {
   await Note.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Note deleted' });
+  res.json({ message: 'Note deleted sucessfully' });
 });
 
-// Start server
-const PORT = 5000;
+
+const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    await connectDB(); 
-    console.log('MongoDB Connected');
-
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`); 
     });
   } catch (err) {
     console.error('Failed to start server:', err.message);
   }
-}
+
+    console.log('Connecting to MongoDB...');
+    await connectDB();  
+    console.log('MongoDB Connected');
+};
 
 startServer();

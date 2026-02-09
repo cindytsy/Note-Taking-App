@@ -1,55 +1,114 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  display: flex;
-  justify-content: center;
-  padding: 40px;
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.app {
-  background: white;
-  width: 400px;
-  padding: 20px;
-  border-radius: 8px;
+header {
+  width: 100%;
+  background-color: #4e73df;
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 20px 0;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+main {
+  padding-top: 80px;
+}
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
 }
 
 h1 {
   text-align: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 20px;
+  color: #2c3e50;
 }
 
 input, textarea {
-  padding: 8px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
   font-size: 14px;
 }
 
 button {
-  padding: 8px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #3498db;
+  color: white;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
+button:hover {
+  background: #2980b9;
 }
 
 .note {
-  border: 1px solid #ddd;
-  padding: 10px;
+  background: #ecf0f1;
+  padding: 12px;
+  border-radius: 8px;
   margin-bottom: 10px;
+  position: relative;
 }
 
-.note-actions {
-  margin-top: 5px;
-  text-align: right;
+.note button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e74c3c;
+  width: auto;
+  padding: 5px 8px;
 }
 
-.note-actions button {
-  margin-left: 5px;
+.note button:hover {
+  background: #c0392b;
+}
+
+textarea {
+  resize: none;
+}
+
+.link-btn {
+  background: #95a5a6;
+  margin-top: 10px;
+}
+
+.link-btn:hover {
+  background: #7f8c8d;
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  display: block;
 }
